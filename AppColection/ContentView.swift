@@ -7,55 +7,53 @@
 
 import SwiftUI
 import SwiftData
+import LocalAuthentication
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
-
+    @State var canShowSecretMessage: Bool = false
+    let context = LAContext()
+    
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
+        VStack {
+            Button(action: {
+                authenticate()
+            },label:{
+                VStack{
+                    Image(systemName: "faceid")
+                        .font(.system(size:129))
+                    Text("Pulsa para mostar el secreto")
+                        .padding(.top,20)
                 }
-                .onDelete(perform: deleteItems)
+            })
+            if canShowSecretMessage {
+                Text("hola este es el mensaje secreto")
+                    .font(.largeTitle)
+                    .bold()
+                    .padding()
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-        } detail: {
-            Text("Select an item")
         }
+        .offset(y: -100)
+        .padding()
+    
     }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
+    
+    func authenticate(){
+        var error: NSError?
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error){
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Por favor autenticate para continuar"){ success, error in
+                if success{
+                    self.canShowSecretMessage.toggle()
+                }else{
+                    print("No se pudo autenticar")
+                }
+                
             }
+        }else{
+            print("el dispositivo no soporta face Id")
         }
     }
 }
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
 }
