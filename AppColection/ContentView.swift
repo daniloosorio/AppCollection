@@ -15,21 +15,21 @@ struct ContentView: View {
         TabView {
             FaceId()
                 .tabItem {
-                    Image(systemName: "house.fill")
-                    Text("Inicio")
+                    Image(systemName: "faceid")
+                    Text("Face Id")
                 }
             
             Vibrations()
                 .tabItem {
-                    Image(systemName: "magnifyingglass")
-                    Text("Buscar")
+                    Image(systemName: "phone.down.waves.left.and.right")
+                    Text("Vibrar")
                 }
             
-            /*ProfileView()
+            Weather()
                 .tabItem {
-                    Image(systemName: "person.fill")
-                    Text("Perfil")
-                }*/
+                    Image(systemName: "cloud.drizzle.fill")
+                    Text("Clima")
+                }
         }
     }
 }
