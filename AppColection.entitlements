@@ -1,0 +1,11 @@
+//
+//  AppColection.entitlements
+//  AppColection
+//
+//  Created by Danilo Osorio on 25/06/25.
+//
+
+<key>com.apple.developer.nfc.readersession.formats</key>
+<array>
+    <string>NDEF</string>
+</array>

@@ -30,6 +30,11 @@ struct ContentView: View {
                     Image(systemName: "cloud.drizzle.fill")
                     Text("Clima")
                 }
+            NFCreader()
+                .tabItem {
+                    Image(systemName: "dot.radiowaves.left.and.right")
+                    Text("NFC")
+                }
         }
     }
 }
