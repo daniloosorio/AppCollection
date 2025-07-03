@@ -12,30 +12,34 @@ import LocalAuthentication
 struct ContentView: View {
 
     var body: some View {
-        TabView {
-            FaceId()
-                .tabItem {
-                    Image(systemName: "faceid")
-                    Text("Face Id")
+            TabView {
+                FaceId()
+                    .tabItem {
+                        Image(systemName: "faceid")
+                        Text("Face Id")
+                    }
+                
+                Vibrations()
+                    .tabItem {
+                        Image(systemName: "phone.down.waves.left.and.right")
+                        Text("Vibrar")
+                    }
+                SubMenu().tabItem {
+                    Image(systemName: "tray.full")
+                    Text("Mas")
                 }
-            
-            Vibrations()
-                .tabItem {
-                    Image(systemName: "phone.down.waves.left.and.right")
-                    Text("Vibrar")
-                }
-            
-            Weather()
-                .tabItem {
-                    Image(systemName: "cloud.drizzle.fill")
-                    Text("Clima")
-                }
-            NFCreader()
-                .tabItem {
-                    Image(systemName: "dot.radiowaves.left.and.right")
-                    Text("NFC")
-                }
-        }
+                
+                Weather()
+                    .tabItem {
+                        Image(systemName: "cloud.drizzle.fill")
+                        Text("Clima")
+                    }
+                NFCreader()
+                    .tabItem {
+                        Image(systemName: "dot.radiowaves.left.and.right")
+                        Text("NFC")
+                    }
+            }
     }
 }
 
