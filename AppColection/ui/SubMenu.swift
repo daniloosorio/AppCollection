@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct SubMenu: View {
     var body: some View {
@@ -20,6 +21,12 @@ struct SubMenu: View {
                 Image(systemName: "storefront")
                 Text("Http")
             }
+            Pokemon()
+                .tabItem {
+                    Image("pokebola2").renderingMode(.original)
+                    Text("Pokemon")
+                }
+            
         }
     }
 }
@@ -27,3 +34,5 @@ struct SubMenu: View {
 #Preview {
     SubMenu()
 }
+
+
