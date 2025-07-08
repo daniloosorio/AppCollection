@@ -15,7 +15,7 @@ struct Pokemon: View {
                 ForEach(viewModel.pokemons, id: \.name){pokemon in
                     Text(pokemon.name)
                 }
-            }
+            }.navigationTitle("Pokemons")
                 }.onAppear{
                     viewModel.getPokemons()
                 }

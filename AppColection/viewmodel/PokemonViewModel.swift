@@ -40,7 +40,10 @@ final class PokemonViewModel {
                httpResponse.statusCode == 200 {
                 let pokemonDataModel = try! JSONDecoder().decode(PokemonResponseDataModel.self, from: data)
                 print("Pokemons \(pokemonDataModel)")
-                self.pokemons = pokemonDataModel.pokemon
+                DispatchQueue.main.async {
+                    self.pokemons = pokemonDataModel.pokemon
+                }
+                
             }
         }.resume()
     }
