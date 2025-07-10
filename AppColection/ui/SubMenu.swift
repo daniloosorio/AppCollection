@@ -27,7 +27,7 @@ struct SubMenu: View {
                     Text("Pokemon")
                 }
             RickAndMorty() .tabItem {
-                Image("pokebola2").renderingMode(.original)
+                Image("rick2").renderingMode(.original)
                 Text("Pokemon")
             }
             

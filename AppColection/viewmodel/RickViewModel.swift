@@ -52,29 +52,74 @@ struct LocationModel: Decodable {
     let dimension:String
 }
 
+struct CharacterBasicInfo {
+    let name: String
+    let image: URL?
+    let firtsEpisodeTitle: String?
+    let dimension : String
+    
+    static var empty: Self {
+        .init(name: "", image: nil, firtsEpisodeTitle: "", dimension: "")
+    }
+    
+}
+
 @Observable
 final class RickViewModel {
+    var characterBasicInfo: CharacterBasicInfo = .empty
+    /*func executeRequest(){
+     let characterURL = URL(string:"https://rickandmortyapi.com/api/character/1")!
+     
+     URLSession.shared.dataTask(with: characterURL){data,response,error in
+     let characterModel = try! JSONDecoder().decode(CharacterModel.self,from: data! )
+     //print("\(characterModel)")
+     
+     let firstEpisodeURL = URL(string:characterModel.episode.first!)!
+     
+     URLSession.shared.dataTask(with: firstEpisodeURL){data,response,error in
+     let episodeModel = try! JSONDecoder().decode(EpisodeModel.self,from: data! )
+     print("\(episodeModel)")
+     
+     let characterLocationURL = URL(string:characterModel.locationUrl)!
+     
+     URLSession.shared.dataTask(with: characterLocationURL){data, response, error in
+     let locationModel = try! JSONDecoder().decode(LocationModel.self, from: data!)
+     print("location: \(locationModel)")
+     DispatchQueue.main.async {
+     self.characterBasicInfo = .init(
+     name: characterModel.name,
+     image: URL(string: characterModel.image)!,
+     firtsEpisodeTitle: episodeModel.name,
+     dimension: locationModel.dimension
+     )
+     }
+     }.resume()
+     }.resume()
+     }.resume()
+     }*/
     
-    func executeRequest(){
+    func executeRequest() async {
         let characterURL = URL(string:"https://rickandmortyapi.com/api/character/1")!
         
-        URLSession.shared.dataTask(with: characterURL){data,response,error in
-            let characterModel = try! JSONDecoder().decode(CharacterModel.self,from: data! )
-            //print("\(characterModel)")
-            
-            let firstEpisodeURL = URL(string:characterModel.episode.first!)!
-            
-            URLSession.shared.dataTask(with: firstEpisodeURL){data,response,error in
-                let episodeModel = try! JSONDecoder().decode(EpisodeModel.self,from: data! )
-                print("\(episodeModel)")
-                
-                let characterLocationURL = URL(string:characterModel.locationUrl)!
-                
-                URLSession.shared.dataTask(with: characterLocationURL){data, response, error in
-                    let locationModel = try! JSONDecoder().decode(LocationModel.self, from: data!)
-                    print("location: \(locationModel)")
-                }.resume()
-            }.resume()
-        }.resume()
+        let (data,_) = try! await URLSession.shared.data(from: characterURL)
+        let characterModel = try! JSONDecoder().decode(CharacterModel.self, from: data)
+        print("character: \(characterModel)")
+        
+        let firtsEpisodeURL = URL(string: characterModel.episode.first!)!
+        let (dataFirstEpisode, _) = try! await URLSession.shared.data(from: firtsEpisodeURL)
+        let episodeModel = try! JSONDecoder().decode(EpisodeModel.self, from: dataFirstEpisode)
+        print("Episode model \(episodeModel)")
+        
+        let characterLocationURL = URL(string:characterModel.locationUrl)!
+        let (dataLocation, _) = try! await URLSession.shared.data(from: characterLocationURL)
+        let locationModel = try! JSONDecoder().decode(LocationModel.self, from: dataLocation)
+        print("location: \(locationModel)")
+        
+        await MainActor.run {
+                    self.characterBasicInfo = .init(name: characterModel.name,
+                                                    image: URL(string: characterModel.image),
+                                                    firtsEpisodeTitle: episodeModel.name,
+                                                    dimension: locationModel.dimension)
+                }
     }
 }
